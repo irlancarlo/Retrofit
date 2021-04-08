@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getRecuperarCEP() {
         CepService cepService = retrofit.create(CepService.class);
-        Call<Cep> recuperarCep = cepService.getRecuperarCep();
+        Call<Cep> recuperarCep = cepService.getRecuperarCep("69073060");
         recuperarCep.enqueue(new Callback<Cep>() {
             @Override
             public void onResponse(Call<Cep> call, Response<Cep> response) {
