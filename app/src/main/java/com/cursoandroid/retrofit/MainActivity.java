@@ -45,13 +45,37 @@ public class MainActivity extends AppCompatActivity {
 
 //        getPostById();
 
-        getPostByParam();
+//        getPostByParam();
 
 //        getAllFotos();
 
         // getRecuperarCEP();
 
+        updatePost();
 
+
+    }
+
+    private void updatePost() {
+        DataService dataService = retrofit.create(DataService.class);
+        Call<Post> updatePost = dataService.updatePost("3", new Post("2", "algum titulo"));
+        updatePost.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    Post body = response.body();
+                    txtRetrofit.setText("\"userId\":" + body.getUserId() +
+                            "\n \"id\":" + body.getId() +
+                            "\n \"title\":" + body.getTitle() +
+                            "\n \"body\":" + body.getBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getPostByParam() {
@@ -61,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
                 StringBuilder builder = new StringBuilder();
-                for(Comment comment: response.body()){
+                for (Comment comment : response.body()) {
                     if (response.isSuccessful()) {
                         builder.append("\"postId\":" + comment.getPostId() + "\n");
                         builder.append("\"name\":" + comment.getName() + "\n");
