@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.cursoandroid.retrofit.api.CepService;
 import com.cursoandroid.retrofit.api.DataService;
 import com.cursoandroid.retrofit.model.Cep;
+import com.cursoandroid.retrofit.model.Comment;
 import com.cursoandroid.retrofit.model.Foto;
 import com.cursoandroid.retrofit.model.Post;
 
@@ -39,15 +39,75 @@ public class MainActivity extends AppCompatActivity {
 
         connectRetrofit(urlApiPost);
 
-        savePostXml();
+//        savePostXml();
 
 //        savePost();
+
+//        getPostById();
+
+        getPostByParam();
 
 //        getAllFotos();
 
         // getRecuperarCEP();
 
 
+    }
+
+    private void getPostByParam() {
+        DataService dataService = retrofit.create(DataService.class);
+        Call<List<Comment>> commentByParamIdPost = dataService.getCommentByParamIdPost("1");
+        commentByParamIdPost.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                StringBuilder builder = new StringBuilder();
+                for(Comment comment: response.body()){
+                    if (response.isSuccessful()) {
+                        builder.append("\"postId\":" + comment.getPostId() + "\n");
+                        builder.append("\"name\":" + comment.getName() + "\n");
+                        builder.append("\"email\":" + comment.getEmail() + "\n");
+                        builder.append("\"body\":" + comment.getBody() + "\n");
+                        txtRetrofit.setText(builder.toString());
+
+
+                    } else {
+                        Log.i("TAG", "onFailure: " + response.code());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getPostById() {
+        DataService dataService = retrofit.create(DataService.class);
+        Call<Post> postById = dataService.getPostById("3");
+        postById.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    StringBuilder builder = new StringBuilder();
+                    Post body = response.body();
+                    builder.append("\"userId\":" + body.getUserId() + "\n");
+                    builder.append("\"title\":" + body.getTitle() + "\n");
+                    builder.append("\"body\":" + body.getBody() + "\n");
+                    txtRetrofit.setText(builder.toString());
+
+
+                } else {
+                    Log.i("TAG", "onFailure: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Log.i("TAG", "onFailure: " + t);
+            }
+        });
     }
 
     private void savePostXml() {
@@ -61,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     txtRetrofit.setText("ID: " + body.getId() +
                             " ,title: " + body.getTitle() +
                             " ,body: " + body.getBody());
-                }else {
-                    Log.i("TAG", "onFailure: "+ response.code());
+                } else {
+                    Log.i("TAG", "onFailure: " + response.code());
                 }
 
             }
