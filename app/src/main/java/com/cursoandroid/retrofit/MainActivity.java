@@ -53,8 +53,28 @@ public class MainActivity extends AppCompatActivity {
 
 //        updatePost();
 
-        updatePostByPatch();
+//        updatePostByPatch();
 
+        removendoPost();
+
+    }
+
+    private void removendoPost() {
+        DataService dataService = retrofit.create(DataService.class);
+        Call<Void> deletePost = dataService.deletePost("3");
+        deletePost.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    txtRetrofit.setText("Registro removido com sucesso:" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
 
     }
 

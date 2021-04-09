@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -48,5 +49,8 @@ public interface DataService {
     // PATCH atualiza somente os dados que são enviados
     @PATCH("/posts/{id}")
     Call<Post> updatePostByPatch(@Path("id") String id, @Body Post post);
+
+    @DELETE("/posts/{id}")
+    Call<Void> deletePost(@Path("id") String id);
 
 }
