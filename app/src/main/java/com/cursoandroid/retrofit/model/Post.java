@@ -1,8 +1,8 @@
 package com.cursoandroid.retrofit.model;
 
 public class Post {
-    private String userId;
     private String id;
+    private String userId;
     private String title;
     private String body;
 

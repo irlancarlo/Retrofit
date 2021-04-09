@@ -3,6 +3,7 @@ package com.cursoandroid.retrofit;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -38,13 +39,39 @@ public class MainActivity extends AppCompatActivity {
 
         connectRetrofit(urlApiPost);
 
-        savePost();
+        savePostXml();
+
+//        savePost();
 
 //        getAllFotos();
 
         // getRecuperarCEP();
 
 
+    }
+
+    private void savePostXml() {
+        DataService dataService = retrofit.create(DataService.class);
+        Call<Post> postCall = dataService.savePost("123", "Titulo 123", "Descricao 123");
+        postCall.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    Post body = response.body();
+                    txtRetrofit.setText("ID: " + body.getId() +
+                            " ,title: " + body.getTitle() +
+                            " ,body: " + body.getBody());
+                }else {
+                    Log.i("TAG", "onFailure: "+ response.code());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Log.e("TAG", "onFailure: ", t);
+            }
+        });
     }
 
     private void savePost() {
